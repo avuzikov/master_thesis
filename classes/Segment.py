@@ -144,3 +144,42 @@ class Segment:
             distance += radius_drone_bs
 
         return drones, covered_power_stations
+
+    # covered with tests
+    def compute_equilateral(self):
+
+        if (self._point1 == self._point2):
+            return None
+
+        p1, p2 = self._point1, self._point2
+
+        # Calculate the midpoint of the opposite segment
+        mid_x = (p1.get_x() + p2.get_x()) / 2
+        mid_y = (p1.get_y() + p2.get_y()) / 2
+
+        # Calculate the length of the segment to find the height of the equilateral triangle
+        segment_length = math.sqrt((p1.get_x() - p2.get_x())**2 + (p1.get_y() - p2.get_y())**2)
+        height = math.sqrt(3) / 2 * segment_length
+
+        # Handle horizontal, vertical, and oblique segments
+        if p1.get_y() == p2.get_y():  # Horizontal segment
+            perp1 = Point(mid_x, mid_y + height)
+            perp2 = Point(mid_x, mid_y - height)
+        elif p1.get_x() == p2.get_x():  # Vertical segment
+            perp1 = Point(mid_x + height, mid_y)
+            perp2 = Point(mid_x - height, mid_y)
+        else:  # Oblique segment
+            slope = (p2.get_y() - p1.get_y()) / (p2.get_x() - p1.get_x())
+            perp_slope = -1 / slope
+            dx = height / math.sqrt(1 + perp_slope ** 2)
+            dy = perp_slope * dx
+
+            # Adjust dx and dy based on the direction of the segment to ensure correct placement
+            if p2.get_x() > p1.get_x():
+                perp1 = Point(mid_x + dx, mid_y + dy)
+                perp2 = Point(mid_x - dx, mid_y - dy)
+            else:
+                perp1 = Point(mid_x - dx, mid_y - dy)
+                perp2 = Point(mid_x + dx, mid_y + dy)
+
+        return perp1, perp2

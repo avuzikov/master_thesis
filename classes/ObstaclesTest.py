@@ -51,9 +51,25 @@ class TestObstacles(unittest.TestCase):
         clear_segment = Segment(Point(12, 0), Point(15, 5))
         self.assertTrue(self.obstacles.is_segment_clear(clear_segment))
 
-    '''
     def test_segment_along_obstacle_edge(self):
         """Segment lies along the edge of an obstacle but doesn't intersect its interior."""
         edge_segment = Segment(Point(0, 0), Point(5, 0))  # Along the base of the first triangle
-        self.assertTrue(self.obstacles.is_segment_clear(edge_segment))
-    '''
+        self.assertFalse(self.obstacles.is_segment_clear(edge_segment))
+
+    def test_segment_edge_in_obstacle_vertex(self):
+        """Segment lies along the edge of an obstacle but doesn't intersect its interior."""
+        edge_segment = Segment(Point(0, 0), Point(-5, -5))  # Along the base of the first triangle
+        self.assertFalse(self.obstacles.is_segment_clear(edge_segment))
+
+    def test_segment_edge_in_obstacle_vertex(self):
+        """Segment lies along the edge of an obstacle but doesn't intersect its interior."""
+        edge_segment = Segment(Point(0, 0), Point(-5, -5))  # Along the base of the first triangle
+        self.assertFalse(self.obstacles.is_segment_clear(edge_segment))
+
+    def test_segment_edge_on_obstacle_edge(self):
+        """Segment lies along the edge of an obstacle but doesn't intersect its interior."""
+        edge_segment = Segment(Point(2, 0), Point(-5, -5))  # Along the base of the first triangle
+        self.assertFalse(self.obstacles.is_segment_clear(edge_segment))
+
+if __name__ == '__main__':
+    unittest.main()

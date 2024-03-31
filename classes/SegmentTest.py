@@ -3,12 +3,18 @@ from Point import Point
 from Segment import Segment
 from Triangle import Triangle
 from Obstacles import Obstacles
+import math
 
 class TestSegment(unittest.TestCase):
     def setUp(self):
         self.p1 = Point(0, 0)
         self.p2 = Point(10, 0)
         self.segment = Segment(self.p1, self.p2)
+        self.epsilon = 1e-6
+
+    def assertPointAlmostEqual(self, point1, point2):
+        self.assertAlmostEqual(point1.get_x(), point2.get_x(), delta=self.epsilon)
+        self.assertAlmostEqual(point1.get_y(), point2.get_y(), delta=self.epsilon)
 
     '''__str__ '''
 
@@ -281,6 +287,30 @@ class TestSegment(unittest.TestCase):
         self.assertIsNotNone(intersection_end, "The end point of the smaller segment should be an intersection point.")
         self.assertEqual(intersection_end, expected_end_point,
                          "The intersection should be at the end point of the smaller segment.")
+
+    '''compute_equilateral'''
+
+    def test_horizontal_segment(self):
+        segment = Segment(Point(0, 0), Point(4, 0))
+        perp1, perp2 = segment.compute_equilateral()
+        # Check if perp1 and perp2 are correctly positioned above and below the midpoint
+        self.assertPointAlmostEqual(perp1, Point(2, math.sqrt(3) * 2))
+        self.assertPointAlmostEqual(perp2, Point(2, -math.sqrt(3) * 2))
+
+    def test_vertical_segment(self):
+        segment = Segment(Point(0, 0), Point(0, 4))
+        perp1, perp2 = segment.compute_equilateral()
+        # Check if perp1 and perp2 are correctly positioned to the left and right of the midpoint
+        self.assertPointAlmostEqual(perp1, Point(math.sqrt(3) * 2, 2))
+        self.assertPointAlmostEqual(perp2, Point(-math.sqrt(3) * 2, 2))
+
+    def test_oblique_segment(self):
+        segment = Segment(Point(0, 0), Point(3, 3))
+        perp1, perp2 = segment.compute_equilateral()
+        # Check if perp1 and perp2 form an equilateral triangle with the segment
+        side_length = segment._point1.distance_to(segment._point2)
+        self.assertAlmostEqual(segment._point1.distance_to(perp1), side_length, delta=self.epsilon)
+        self.assertAlmostEqual(segment._point1.distance_to(perp2), side_length, delta=self.epsilon)
 
 if __name__ == '__main__':
     unittest.main()

@@ -24,6 +24,7 @@ class Obstacles:
     def __str__(self):
         return '\n'.join(str(triangle) for triangle in self.triangles)
 
+    # covered with tests
     # checks if ends of segment have LOS connection
     def is_segment_clear(self, segment):
         for triangle in self.triangles:

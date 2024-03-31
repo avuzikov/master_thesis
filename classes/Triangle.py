@@ -42,6 +42,51 @@ class Triangle:
         # The point is on the inside if there are no signs differing (all non-negative or all non-positive)
         return not (has_neg and has_pos)
 
+    # covered with tests
+    def _is_triangle_degenerate(self):
+        # Check if any vertices are the same
+        if self._point1 == self._point2 or self._point2 == self._point3 or self._point1 == self._point3:
+            return True
+
+        # Check if any edges are parallel by calculating the cross product of vectors
+        vector_a = (self._point2.get_x() - self._point1.get_x(), self._point2.get_y() - self._point1.get_y())
+        vector_b = (self._point3.get_x() - self._point2.get_x(), self._point3.get_y() - self._point2.get_y())
+        vector_c = (self._point1.get_x() - self._point3.get_x(), self._point1.get_y() - self._point3.get_y())
+
+        cross_ab = vector_a[0] * vector_b[1] - vector_a[1] * vector_b[0]
+        cross_bc = vector_b[0] * vector_c[1] - vector_b[1] * vector_c[0]
+        cross_ca = vector_c[0] * vector_a[1] - vector_c[1] * vector_a[0]
+
+        # If the cross product of any two edges is zero, the edges are parallel
+        if cross_ab == 0 or cross_bc == 0 or cross_ca == 0:
+            return True
+
+        return False
+
+    # covered with tests
+    def _angle_is_large(self):
+        if self._is_triangle_degenerate():
+            return None
+
+        # Calculate the lengths of the sides
+        a = self._point2.distance_to(self._point3)
+        b = self._point1.distance_to(self._point3)
+        c = self._point1.distance_to(self._point2)
+
+        # Check each angle using the law of cosines
+        cos_angle_A = (b ** 2 + c ** 2 - a ** 2) / (2 * b * c)
+        cos_angle_B = (a ** 2 + c ** 2 - b ** 2) / (2 * a * c)
+        cos_angle_C = (a ** 2 + b ** 2 - c ** 2) / (2 * a * b)
+
+        if cos_angle_A < -0.5:
+            return self._point1
+        if cos_angle_B < -0.5:
+            return self._point2
+        if cos_angle_C < -0.5:
+            return self._point3
+
+        return None
+'''
     # TODO: fix compute_fermat_point
     def compute_fermat_point(self):
         if self._fermat_point is not None:
@@ -114,7 +159,6 @@ class Triangle:
         y = p1.get_y() + lambda_ * (q1.get_y() - p1.get_y())
         return Point(x, y)
 
-    '''
     Tries to position drones from all 3 ends through Fermat-Torricelli point. Chooses positioning that uses less drones
     or, in case of equality, covers more power stations
     Returns drone positions and number of covered Power Stations

@@ -3,9 +3,12 @@ from Point import Point
 from Segment import Segment
 from Triangle import Triangle
 from Obstacles import Obstacles
+import math
 
 class TestTriangle(unittest.TestCase):
 
+    def setUp(self):
+        self.epsilon = 1e-6  # Tolerance for floating point comparison
     '''is_point_inside'''
 
     def test_triangle_degenerate_all_vertices_one_point(self):
@@ -79,7 +82,55 @@ class TestTriangle(unittest.TestCase):
         self.assertTrue(triangle.is_point_inside(point_on_vertex),
                         "A point coinciding with a triangle's vertex should be considered inside.")
 
-    '''compute_fermat_point'''
+    '''_is_triangle_degenerate'''
+    def test_non_degenerate_triangle(self):
+        triangle = Triangle(Point(0, 0), Point(1, 1), Point(1, 0))
+        self.assertFalse(triangle._is_triangle_degenerate(), "The triangle should not be degenerate.")
+
+    def test_triangle_with_repeated_vertices(self):
+        triangle = Triangle(Point(0, 0), Point(0, 0), Point(1, 1))
+        self.assertTrue(triangle._is_triangle_degenerate(),
+                        "The triangle should be degenerate due to repeated vertices.")
+
+    def test_triangle_with_same_vertex(self):
+        triangle = Triangle(Point(0, 0), Point(0, 0), Point(0, 0))
+        self.assertTrue(triangle._is_triangle_degenerate(),
+                        "The triangle should be degenerate due to being a point.")
+
+    def test_collinear_vertices(self):
+        # Points (0,0), (2,2), and (4,4) are collinear
+        triangle = Triangle(Point(0, 0), Point(2, 2), Point(4, 4))
+        self.assertTrue(triangle._is_triangle_degenerate(),
+                        "The triangle should be degenerate due to collinear vertices.")
+
+    '''_angle_is_large'''
+    def test_angle_greater_than_120(self):
+        # Triangle with one angle greater than 120 degrees
+        triangle = Triangle(Point(0, 0), Point(20, 0), Point(2, 1))
+        large_angle_vertex = triangle._angle_is_large()
+        self.assertIsNotNone(large_angle_vertex, "Expected a vertex with a large angle.")
+        self.assertTrue(large_angle_vertex in [triangle._point1, triangle._point2, triangle._point3],
+                        "The vertex should be one of the triangle's vertices.")
+
+        self.assertPointAlmostEqual(large_angle_vertex, Point(-math.sqrt(3) * 2, 2))
+
+    def test_all_angles_less_than_120(self):
+        # Acute triangle where all angles are less than 90 degrees
+        triangle = Triangle(Point(0, 0), Point(4, 0), Point(2, 3))
+        large_angle_vertex = triangle._angle_is_large()
+        self.assertIsNone(large_angle_vertex, "Expected no vertex since all angles are less than 120 degrees.")
+
+    def test_degenerate_triangle_repeated_vertices(self):
+        # Degenerate triangle with repeated vertices
+        triangle = Triangle(Point(0, 0), Point(0, 0), Point(2, 2))
+        large_angle_vertex = triangle._angle_is_large()
+        self.assertIsNone(large_angle_vertex, "Expected None for a degenerate triangle with repeated vertices.")
+
+    def test_degenerate_triangle_collinear_vertices(self):
+        # Degenerate triangle with collinear vertices
+        triangle = Triangle(Point(0, 0), Point(2, 2), Point(4, 4))
+        large_angle_vertex = triangle._angle_is_large()
+        self.assertIsNone(large_angle_vertex, "Expected None for a degenerate triangle with collinear vertices.")
 
 if __name__ == '__main__':
     unittest.main()
