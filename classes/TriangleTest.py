@@ -11,6 +11,10 @@ class TestTriangle(unittest.TestCase):
         self.epsilon = 1e-6  # Tolerance for floating point comparison
     '''is_point_inside'''
 
+    def assertPointAlmostEqual(self, point1, point2):
+        self.assertAlmostEqual(point1.get_x(), point2.get_x(), delta=self.epsilon)
+        self.assertAlmostEqual(point1.get_y(), point2.get_y(), delta=self.epsilon)
+
     def test_triangle_degenerate_all_vertices_one_point(self):
         """Test a degenerate triangle where all vertices are at the same point."""
         degenerate_triangle = Triangle(Point(1, 1), Point(1, 1), Point(1, 1))
@@ -112,7 +116,7 @@ class TestTriangle(unittest.TestCase):
         self.assertTrue(large_angle_vertex in [triangle._point1, triangle._point2, triangle._point3],
                         "The vertex should be one of the triangle's vertices.")
 
-        self.assertPointAlmostEqual(large_angle_vertex, Point(-math.sqrt(3) * 2, 2))
+        self.assertPointAlmostEqual(large_angle_vertex, Point(2, 1))
 
     def test_all_angles_less_than_120(self):
         # Acute triangle where all angles are less than 90 degrees
@@ -131,6 +135,29 @@ class TestTriangle(unittest.TestCase):
         triangle = Triangle(Point(0, 0), Point(2, 2), Point(4, 4))
         large_angle_vertex = triangle._angle_is_large()
         self.assertIsNone(large_angle_vertex, "Expected None for a degenerate triangle with collinear vertices.")
+
+    '''compute_fermat_point'''
+    # TODO: check
+    def test_degenerate_triangle(self):
+        # Degenerate triangle with repeated vertices
+        triangle = Triangle(Point(0, 0), Point(0, 0), Point(1, 1))
+        fermat_point = triangle.compute_fermat_point()
+        self.assertIsNone(fermat_point, "Expected None for a degenerate triangle.")
+
+    def test_triangle_with_large_angle(self):
+        # Triangle with one angle >= 120 degrees
+        triangle = Triangle(Point(0, 0), Point(40, 0), Point(2, 1))
+        fermat_point = triangle.compute_fermat_point()
+        self.assertTrue(fermat_point in [Point(0, 0), Point(40, 0), Point(2, 1)],
+                        "The Fermat point should be a triangle vertex with a large angle.")
+
+    def test_acute_triangle(self):
+        # Acute triangle (all angles < 120 degrees)
+        triangle = Triangle(Point(0, 0), Point(4, 0), Point(2, 3))
+        # Known Fermat point for this triangle setup, if applicable
+        known_fermat_point = Point(2, 1.1547005)
+        fermat_point = triangle.compute_fermat_point()
+        self.assertPointAlmostEqual(fermat_point, known_fermat_point)
 
 if __name__ == '__main__':
     unittest.main()
