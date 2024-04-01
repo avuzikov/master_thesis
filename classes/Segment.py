@@ -130,11 +130,13 @@ class Segment:
                 perp2 = Point(mid_x + dx, mid_y + dy)
 
         return perp1, perp2
+
     '''
     Tries to position drones from both ends. Chooses positioning that covers more power stations
     Returns drone positions and number of covered Power Stations
     '''
 
+    # covered with tests
     def position_drones(self, power_stations, radius_drone_bs, obstacles):
         # Check if the segment is obstructed by any obstacle
         if not obstacles.is_segment_clear(Segment(self._point1, self._point2)):

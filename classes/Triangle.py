@@ -116,5 +116,5 @@ class Triangle:
 
         # Step 5: Return the intersection of s and s3
         return s1.get_intersection_point(s3)
+
     # def position_drones(self, power_stations, radiusDroneBS, obstacles):
-    # TODO: Implement
