@@ -184,6 +184,7 @@ class Triangle:
         segments_to_fermat = [Segment(vertex, fermat_point) for vertex in [self._point1, self._point2, self._point3]]
         clear_segments = [seg for seg in segments_to_fermat if obstacles.is_segment_clear(seg)]
 
+        # TODO: fix this part of test
         if len(clear_segments) < 3:
             return None, None  # At least one path to Fermat point is blocked
 

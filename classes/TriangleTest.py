@@ -216,7 +216,31 @@ class TestTriangle(unittest.TestCase):
         self.assertIsNone(drones, "drones value is None")
         self.assertIsNone(covered_stations, "covered_stations is None")
 
-    # TODO: check
+    def test_equilateral(self):
+        # Triangle with one clear edge
+        triangle = Triangle(Point(0, 0), Point(20, 0), Point(10, 17.32050807))
+        power_stations = [Point(1, 1), Point(1, 9)]
+        radius_drone_bs = 2
+        obstacles = Obstacles()  # No obstacles
+
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertEqual(len(drones), 16, "There should be exactly 16 drones.")
+        self.assertEqual(len(covered_stations), 1)
+
+    # TODO: fix test from here
+    def test_equilateral_blocked_fermat_segment(self):
+        # Triangle with one clear edge
+        triangle = Triangle(Point(0, 0), Point(20, 0), Point(10, 17.32050807))
+        power_stations = [Point(1, 1), Point(1, 9)]
+        radius_drone_bs = 2
+        obstacles = Obstacles()  # No obstacles
+        obstacles.add_triangle(Triangle(Point(1.72, 1.0), Point(1.78, 1.0), Point(1.75, 1.1)))
+
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertEqual(len(drones), 16, "There should be exactly 5 drones.")
+        self.assertEqual(len(covered_stations), 1)
+
+
     def test_fermat_point_applicable_all_paths_clear(self):
         # Fermat point applicable and all paths clear
         triangle = Triangle(Point(0, 0), Point(0, 10), Point(10, 0))
