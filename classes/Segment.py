@@ -140,7 +140,7 @@ class Segment:
     def position_drones(self, power_stations, radius_drone_bs, obstacles):
         # Check if the segment is obstructed by any obstacle
         if not obstacles.is_segment_clear(Segment(self._point1, self._point2)):
-            return None, set()
+            return None, None
 
         # Calculate drone positions and covered stations starting from _point1
         drones_from_p1, covered_from_p1 = self._calculate_drone_positions(self._point1, self._point2, power_stations,

@@ -117,4 +117,53 @@ class Triangle:
         # Step 5: Return the intersection of s and s3
         return s1.get_intersection_point(s3)
 
-    # def position_drones(self, power_stations, radiusDroneBS, obstacles):
+    # TODO: check this implementation
+    def position_drones_triangle(self, power_stations, radius_drone_bs, obstacles):
+        fermat_point = self.compute_fermat_point()
+
+        if fermat_point is None:
+            # Handle degenerate triangle case by using the two shortest edges
+            edges = sorted([self._segment1, self._segment2, self._segment3],
+                           key=lambda seg: seg._point1.distance_to(seg._point2))
+            shortest_edges = edges[:2]  # Get the two shortest edges
+            for edge in shortest_edges:
+                if obstacles.is_segment_clear(edge):
+                    drones, covered = edge.position_drones(power_stations, radius_drone_bs, obstacles)
+                    if drones is not None:
+                        return drones, covered
+            return None, None  # All shortest edges are blocked
+
+        large_angle_vertex = self._angle_is_large()
+        if large_angle_vertex:
+            # Handle the large angle scenario
+            connected_edges = [edge for edge in [self._segment1, self._segment2, self._segment3] if
+                               large_angle_vertex in [edge._point1, edge._point2]]
+            drones = []
+            covered_stations = set()
+            for edge in connected_edges:
+                if obstacles.is_segment_clear(edge):
+                    edge_drones, edge_covered = edge.position_drones(power_stations, radius_drone_bs, obstacles)
+                    if edge_drones is None:
+                        continue  # Try the other edge if this one is blocked
+                    drones += edge_drones
+                    covered_stations.update(edge_covered)
+            if drones:
+                return drones, covered_stations
+            return None, None  # Both edges are blocked
+
+        # Handle the case with the Fermat point
+        segments_to_fermat = [Segment(vertex, fermat_point) for vertex in [self._point1, self._point2, self._point3]]
+        clear_segments = [seg for seg in segments_to_fermat if obstacles.is_segment_clear(seg)]
+
+        if len(clear_segments) < 2:
+            return None, None  # Less than two clear paths to Fermat point
+
+        drones = [fermat_point]
+        covered_stations = set()
+        for seg in clear_segments:
+            seg_drones, seg_covered = seg.position_drones(power_stations, radius_drone_bs, obstacles)
+            if seg_drones is not None:
+                drones += seg_drones
+                covered_stations.update(seg_covered)
+
+        return drones, covered_stations
