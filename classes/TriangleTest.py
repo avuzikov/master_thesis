@@ -137,7 +137,6 @@ class TestTriangle(unittest.TestCase):
         self.assertIsNone(large_angle_vertex, "Expected None for a degenerate triangle with collinear vertices.")
 
     '''compute_fermat_point'''
-    # TODO: check
     def test_degenerate_triangle(self):
         # Degenerate triangle with repeated vertices
         triangle = Triangle(Point(0, 0), Point(0, 0), Point(1, 1))
@@ -158,6 +157,88 @@ class TestTriangle(unittest.TestCase):
         known_fermat_point = Point(2, 1.1547005)
         fermat_point = triangle.compute_fermat_point()
         self.assertPointAlmostEqual(fermat_point, known_fermat_point)
+
+    '''position_drones_triangle'''
+    def test_degenerate_triangle(self):
+        # Degenerate triangle: all points on a line
+        triangle = Triangle(Point(0, 0), Point(5, 5), Point(10, 10))
+        power_stations = [Point(2, 2), Point(8, 8)]
+        radius_drone_bs = 3
+        obstacles = Obstacles()  # Assume no obstacles for simplicity
+
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertEqual(len(drones), 4, "There should be exactly 4 drones.")
+        self.assertTrue(len(covered_stations) == len(power_stations))
+
+    def test_degenerate_triangle_obstacle(self):
+        # Degenerate triangle: all points on a line
+        triangle = Triangle(Point(0, 0), Point(5, 5), Point(10, 10))
+        power_stations = [Point(2, 2), Point(8, 8)]
+        radius_drone_bs = 3
+        obstacles = Obstacles()  # Assume no obstacles for simplicity
+        obstacles.add_triangle(Triangle(Point(2, 3), Point(3, 2), Point(4, 4)))
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertIsNone(drones, "drones value is None")
+        self.assertIsNone(covered_stations, "covered_stations is None")
+
+    def test_large_angle_all_edges_clear(self):
+        # Triangle with a large angle and all edges clear
+        triangle = Triangle(Point(0, 0), Point(10, 2), Point(20, 0))
+        power_stations = [Point(1, 1), Point(1, 9)]
+        radius_drone_bs = 5
+        obstacles = Obstacles()  # No obstacles
+
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertEqual(len(drones), 4, "There should be exactly 4 drones.")
+        self.assertEqual(len(covered_stations), 1)
+
+    def test_large_angle_two_clear_edges(self):
+        # Triangle with a large angle and two clear edges
+        triangle = Triangle(Point(0, 0), Point(10, 2), Point(20, 0))
+        power_stations = [Point(1, 1), Point(1, 9)]
+        radius_drone_bs = 5
+        obstacles = Obstacles()  # No obstacles
+        obstacles.add_triangle(Triangle(Point(9, 1), Point(9, 3), Point(2, 2)))
+
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertEqual(len(drones), 5, "There should be exactly 5 drones.")
+        self.assertEqual(len(covered_stations), 1)
+
+    def test_large_angle_one_clear_edge(self):
+        # Triangle with one clear edge
+        triangle = Triangle(Point(0, 0), Point(10, 2), Point(20, 0))
+        power_stations = [Point(1, 1), Point(1, 9)]
+        radius_drone_bs = 5
+        obstacles = Obstacles()  # No obstacles
+        obstacles.add_triangle(Triangle(Point(9, -1), Point(9, 3), Point(2, 2)))
+
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertIsNone(drones, "drones value is None")
+        self.assertIsNone(covered_stations, "covered_stations is None")
+
+    # TODO: check
+    def test_fermat_point_applicable_all_paths_clear(self):
+        # Fermat point applicable and all paths clear
+        triangle = Triangle(Point(0, 0), Point(0, 10), Point(10, 0))
+        power_stations = [Point(1, 1), Point(5, 5)]
+        radius_drone_bs = 5
+        obstacles = Obstacles()  # No obstacles
+
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertIn(triangle.compute_fermat_point(), drones)  # Fermat point should have a drone
+        self.assertTrue(len(covered_stations) == len(power_stations))
+
+    def test_obstructed_paths(self):
+        # Path to Fermat point is obstructed
+        triangle = Triangle(Point(0, 0), Point(0, 10), Point(10, 0))
+        power_stations = [Point(1, 1), Point(5, 5)]
+        radius_drone_bs = 5
+        obstacles = Obstacles()
+        obstacles.add_triangle(Triangle(Point(2, 2), Point(3, 3), Point(2, 3)))  # Obstacle blocking the path
+
+        drones, covered_stations = triangle.position_drones_triangle(power_stations, radius_drone_bs, obstacles)
+        self.assertIsNone(drones)
+        self.assertIsNone(covered_stations)
 
 if __name__ == '__main__':
     unittest.main()

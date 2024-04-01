@@ -313,7 +313,6 @@ class TestSegment(unittest.TestCase):
         self.assertAlmostEqual(segment._point1.distance_to(perp2), side_length, delta=self.epsilon)
 
     '''position_drones'''
-
     def test_position_drones_clear_path(self):
         """Test positioning drones on a segment from both ends without any obstacles."""
         segment = Segment(Point(0, 0), Point(9, 0))
@@ -336,6 +335,32 @@ class TestSegment(unittest.TestCase):
                              f"Drone X position should be {expected_pos.get_x()}.")
             self.assertEqual(drone_pos.get_y(), expected_pos.get_y(),
                              f"Drone Y position should be {expected_pos.get_y()}.")
+
+    def test_position_drones_clear_path_short_edge(self):
+        """Test positioning drones on a segment with 0 drones"""
+        segment = Segment(Point(0, 0), Point(9, 0))
+        power_stations = [Point(3, 0), Point(5, 1)]
+        radius_drone_bs = 18
+        obstacles = Obstacles()  # No obstacles added
+
+        drone_positions, covered_stations = segment.position_drones(power_stations, radius_drone_bs, obstacles)
+
+        # Check the number of drone positions
+        self.assertEqual(len(drone_positions), 0, "There should be exactly 0 drone positions.")
+
+    def test_position_drones_not_clear_path(self):
+        """Test positioning drones on a segment with blocked path"""
+        segment = Segment(Point(0, 0), Point(9, 0))
+        power_stations = [Point(3, 0), Point(5, 1)]
+        radius_drone_bs = 2
+        obstacles = Obstacles()  # No obstacles added
+        obstacles.add_triangle(Triangle(Point(4, 1), Point(4, -1), Point(5, 5)))
+
+        drone_positions, covered_stations = segment.position_drones(power_stations, radius_drone_bs, obstacles)
+
+        # Check the number of drone positions
+        self.assertIsNone(drone_positions)
+        self.assertIsNone(covered_stations)
 
 if __name__ == '__main__':
     unittest.main()
