@@ -1,7 +1,4 @@
 from Segment import Segment
-from Point import Point
-from Triangle import Triangle
-import math
 
 
 class Obstacles:

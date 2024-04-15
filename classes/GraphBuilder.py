@@ -3,28 +3,28 @@ from thesisCode.classes.ConnectivityComponent import ConnectivityComponent
 from thesisCode.classes.Segment import Segment
 
 class GraphBuilder:
-    def __init__(self, radiusBS, radiusDroneBS, baseStations, power_stations=[], obstacles=[]):
+    def __init__(self, radius_bs, radius_drone_bs, base_stations, power_stations=[], obstacles=[]):
         # Filter out base and power stations that are inside obstacles
-        baseStations, power_stations = self._check_stations_over_obstacles(baseStations, power_stations, obstacles)
+        base_stations, power_stations = self._check_stations_over_obstacles(base_stations, power_stations, obstacles)
 
         # Find initial connectivity components in graph
-        self._components = self._find_components(baseStations, radiusBS, obstacles)
+        self._components = self._find_components(base_stations, radius_bs, obstacles)
 
         # Filter out power stations covered by functioning ground BS
-        self._power_stations = self._filter_covered_power_stations(power_stations, baseStations, radiusBS, obstacles)
+        self._power_stations = self._filter_covered_power_stations(power_stations, base_stations, radius_bs, obstacles)
 
         self._obstacles = obstacles
-        self._radiusBS = radiusBS
-        self._radiusDroneBS = radiusDroneBS
+        self._radiusBS = radius_bs
+        self._radiusDroneBS = radius_drone_bs
 
         print(self._components)
 
-    def _check_stations_over_obstacles(self, baseStations, power_stations, obstacles):
+    def _check_stations_over_obstacles(self, base_stations, power_stations, obstacles):
         filtered_base_stations = []
         filtered_power_stations = []
 
         # Check base stations
-        for base in baseStations:
+        for base in base_stations:
             if not obstacles.is_point_inside_any_obstacle(base):
                 filtered_base_stations.append(base)
             else:
@@ -39,12 +39,12 @@ class GraphBuilder:
 
         return filtered_base_stations, filtered_power_stations
 
-    def _filter_covered_power_stations(self, power_stations, baseStations, radiusBS, obstacles):
+    def _filter_covered_power_stations(self, power_stations, base_stations, radius_bs, obstacles):
         filtered_power_stations = []
         for power in power_stations:
             is_close_to_base_station = False
-            for base in baseStations:
-                if power.distance_to(base) <= radiusBS:
+            for base in base_stations:
+                if power.distance_to(base) <= radius_bs:
                     # Check if the segment between power and base is clear of obstacles
                     segment = Segment(power, base)
                     if obstacles.is_segment_clear(segment):
@@ -55,28 +55,28 @@ class GraphBuilder:
                 filtered_power_stations.append(power)
         return filtered_power_stations
 
-    def _find_components(self, baseStations, radiusBS, obstacles):
+    def _find_components(self, base_stations, radius_bs, obstacles):
         def dfs(node, visited, component):
             visited[node] = True
-            component.addBS(baseStations[node])
+            component.addBS(base_stations[node])
             for neighbor in graph[node]:
                 if not visited[neighbor]:
                     dfs(neighbor, visited, component)
 
         # Create the graph
-        graph = {i: [] for i in range(len(baseStations))}
-        for i, base1 in enumerate(baseStations):
-            for j, base2 in enumerate(baseStations):
-                if i != j and base1.distance_to(base2) <= radiusBS:
+        graph = {i: [] for i in range(len(base_stations))}
+        for i, base1 in enumerate(base_stations):
+            for j, base2 in enumerate(base_stations):
+                if i != j and base1.distance_to(base2) <= radius_bs:
                     # Check if the segment between base1 and base2 is clear of obstacles
                     segment = Segment(base1, base2)
                     if obstacles.is_segment_clear(segment):
                         graph[i].append(j)
 
         # Find connected components using DFS
-        visited = [False] * len(baseStations)
+        visited = [False] * len(base_stations)
         components = []
-        for i in range(len(baseStations)):
+        for i in range(len(base_stations)):
             if not visited[i]:
                 component = ConnectivityComponent()
                 dfs(i, visited, component)
