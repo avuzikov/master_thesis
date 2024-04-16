@@ -1,5 +1,4 @@
-import math
-from classes.Point import Point
-from classes.Segment import Segment
+from data.parse_data import parse_data
 
-print('Hello world')
+# Load test data from JSON
+parse_data('./thesisCode/data/test_data1.json')

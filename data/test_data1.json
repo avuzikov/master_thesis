@@ -1,0 +1,28 @@
+{
+  "_comment": "Equilateral, 3 connectivity components, each keeping 3 BS, no obstacles",
+  "radius_drones_bs": 5.0,
+  "radius_bs": 10.0,
+  "base_stations": [
+    [0,0],
+    [-2,0],
+    [4,0],
+    [209,0],
+    [200,0],
+    [192,0],
+    [102, 175.205],
+    [100, 173.205],
+    [98, 175.205]
+  ],
+  "power_stations": [
+    [0, 1]
+  ],
+  "obstacles": [
+    {
+      "points": [
+        [0.5, 0.5],
+        [0.7, 0.7],
+        [0.6, 0.6]
+      ]
+    }
+  ]
+}
