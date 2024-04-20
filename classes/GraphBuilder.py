@@ -1,6 +1,7 @@
 # Responsible for initializing graph
-from thesisCode.classes.ConnectivityComponent import ConnectivityComponent
-from thesisCode.classes.Segment import Segment
+
+from Segment import Segment
+from ConnectivityComponent import ConnectivityComponent
 
 class GraphBuilder:
     def __init__(self, radius_bs, radius_drone_bs, base_stations, power_stations=[], obstacles=[]):
@@ -18,6 +19,21 @@ class GraphBuilder:
         self._radiusDroneBS = radius_drone_bs
 
         print(self._components)
+
+    def getComponents(self):
+        return self._components
+
+    def getPowerStations(self):
+        return self._power_stations
+
+    def getObstacles(self):
+        return self._obstacles
+
+    def getRadiusBS(self):
+        return self._radiusBS
+
+    def getRadiusDroneBS(self):
+        return self._radiusDroneBS
 
     def _check_stations_over_obstacles(self, base_stations, power_stations, obstacles):
         filtered_base_stations = []

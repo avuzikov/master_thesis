@@ -1,5 +1,6 @@
 import json
 import os
+from ..classes.GraphBuilder import GraphBuilder
 
 def parse_data(file_path):
     # Read and parse the JSON file
@@ -8,11 +9,9 @@ def parse_data(file_path):
 
     # Access data
     radius_drones_bs = data['radius_drones_bs']
+    radius_bs = data['radius_bs']
     base_stations = data['base_stations']
     power_stations = data['power_stations']
     obstacles = data['obstacles']
 
-    # Example: Print the radius and the first base station
-    print("Radius of drone base station:", radius_drones_bs)
-    print("First base station coordinates:", base_stations[0])
-    print("First obstacle's points:", obstacles[0]['points'])
+    return GraphBuilder(radius_bs, radius_drones_bs, base_stations)  # power_stations=[], obstacles=[]
