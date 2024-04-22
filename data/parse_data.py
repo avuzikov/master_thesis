@@ -1,6 +1,6 @@
 import json
 import os
-from ..classes.GraphBuilder import GraphBuilder
+from thesisCode.classes.GraphBuilder import GraphBuilder
 
 def parse_data(file_path):
     # Read and parse the JSON file

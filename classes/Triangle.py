@@ -1,5 +1,5 @@
-from Segment import Segment
-from Point import Point
+from thesisCode.classes.Segment import Segment
+from thesisCode.classes.Point import Point
 import math
 
 

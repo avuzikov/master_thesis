@@ -1,4 +1,4 @@
-from Segment import Segment
+from thesisCode.classes.Segment import Segment
 
 
 class Obstacles:

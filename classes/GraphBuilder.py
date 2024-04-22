@@ -1,7 +1,7 @@
 # Responsible for initializing graph
 
-from Segment import Segment
-from ConnectivityComponent import ConnectivityComponent
+from thesisCode.classes.Segment import Segment
+from thesisCode.classes.ConnectivityComponent import ConnectivityComponent
 
 class GraphBuilder:
     def __init__(self, radius_bs, radius_drone_bs, base_stations, power_stations=[], obstacles=[]):
