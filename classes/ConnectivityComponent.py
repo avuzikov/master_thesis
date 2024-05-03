@@ -1,6 +1,9 @@
 class ConnectivityComponent:
-    def __init__(self):
+    def __init__(self, component_name):
+        self._component_name = component_name
         self.BSs = []
+    def getComponentName(self):
+        return self._component_name
     def addBS(self, new_bs):
         self.BSs.append(new_bs)
     def __str__(self):

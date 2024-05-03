@@ -13,6 +13,9 @@ class Segment:
         return f'Segment({self._point1}, {self._point2})'
 
     # covered with tests
+    __repr__ = __str__
+
+    # covered with tests
     def _calculate_slope(self, p1, p2):
         if math.isclose(p1.get_x(), p2.get_x()):
             return float('inf')  # Vertical line

@@ -14,6 +14,13 @@ class Triangle:
         self._fermat_point = None
 
     # covered with tests
+    def __str__(self):
+        return f'Triangle({self._point1}, {self._point2}, {self._point3})'
+
+    # covered with tests
+    __repr__ = __str__
+
+    # covered with tests
     def _sign(self, p1, p2, p3):
         return (p1.get_x() - p3.get_x()) * (p2.get_y() - p3.get_y()) - (p2.get_x() - p3.get_x()) * (
                     p1.get_y() - p3.get_y())

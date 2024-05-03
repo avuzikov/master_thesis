@@ -1,10 +1,11 @@
 # Responsible for initializing graph
 
 from thesisCode.classes.Segment import Segment
+from thesisCode.classes.Obstacles import Obstacles
 from thesisCode.classes.ConnectivityComponent import ConnectivityComponent
 
 class GraphBuilder:
-    def __init__(self, radius_bs, radius_drone_bs, base_stations, power_stations=[], obstacles=[]):
+    def __init__(self, radius_bs, radius_drone_bs, base_stations, power_stations=[], obstacles=Obstacles()):
         # Filter out base and power stations that are inside obstacles
         base_stations, power_stations = self._check_stations_over_obstacles(base_stations, power_stations, obstacles)
 
@@ -17,8 +18,6 @@ class GraphBuilder:
         self._obstacles = obstacles
         self._radiusBS = radius_bs
         self._radiusDroneBS = radius_drone_bs
-
-        print(self._components)
 
     def getComponents(self):
         return self._components
@@ -92,9 +91,11 @@ class GraphBuilder:
         # Find connected components using DFS
         visited = [False] * len(base_stations)
         components = []
+        component_number = 0
         for i in range(len(base_stations)):
             if not visited[i]:
-                component = ConnectivityComponent()
+                component = ConnectivityComponent(component_number)
+                component_number += 1
                 dfs(i, visited, component)
                 components.append(component)
 
