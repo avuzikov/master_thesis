@@ -4,4 +4,7 @@ from thesisCode.data.parse_data import parse_data
 
 # Load test data from JSON
 graph_builder = parse_data('./thesisCode/data/test_data1.json')
-build_spanning_tree(graph_builder)
+
+components = graph_builder.getComponents()
+
+print(build_spanning_tree(graph_builder))
