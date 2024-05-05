@@ -46,4 +46,4 @@ def build_spanning_tree(graph_builder):
             if len(connected) == len(components):
                 break
 
-    return mst_edges
+    return mst_edges, parent

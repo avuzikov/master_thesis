@@ -34,4 +34,4 @@ def parse_data(file_path):
         point2 = Point(points_array[2][0], points_array[2][1])
         obstacles.add_triangle(Triangle(point0, point1, point2))
 
-    return GraphBuilder(radius_bs, radius_drones_bs, base_stations)  # power_stations=[], obstacles=[]
+    return GraphBuilder(radius_bs, radius_drones_bs, base_stations, power_stations, obstacles)
