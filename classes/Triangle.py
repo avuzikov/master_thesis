@@ -124,7 +124,7 @@ class Triangle:
         # Step 5: Return the intersection of s and s3
         return s1.get_intersection_point(s3)
 
-    # NOT covered with tests
+    # covered with tests
     def position_drones_fermat(self, power_stations, radius_drone_bs, obstacles):
         fermat_point = self.compute_fermat_point()
 

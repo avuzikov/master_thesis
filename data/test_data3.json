@@ -1,0 +1,27 @@
+{
+  "_comment": "5 points on one line, divided by obstacle",
+  "radius_drones_bs": 5.0,
+  "radius_bs": 5.0,
+  "base_stations": [
+    [0, 0],
+    [10, 0],
+    [10, 6],
+    [10, -6],
+    [10, 12],
+    [20, 0],
+    [30, 0],
+    [40, 0]
+  ],
+  "power_stations": [
+    [0, 1]
+  ],
+  "obstacles": [
+    {
+      "points": [
+        [25, -1],
+        [25, 1],
+        [26, 0]
+      ]
+    }
+  ]
+}
