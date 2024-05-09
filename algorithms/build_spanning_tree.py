@@ -8,7 +8,7 @@ def build_spanning_tree(graph_builder):
     mst_edges = []
 
     # A set to keep track of connected components (using component names)
-    connected = set()
+    number_tree_edges = 0
     edges = []
 
     # Function to find all possible edges
@@ -40,10 +40,10 @@ def build_spanning_tree(graph_builder):
         if find(edge.cluster1) != find(edge.cluster2):
             union(edge.cluster1, edge.cluster2)
             mst_edges.append(edge)
-            connected.update([edge.cluster1, edge.cluster2])
+            number_tree_edges += 1
 
-            # If all components are connected, we can stop early
-            if len(connected) == len(components):
+            # If number of edges is one edge less that number of components, the tree is built
+            if (number_tree_edges + 1) == len(components):
                 break
 
     return mst_edges, parent
