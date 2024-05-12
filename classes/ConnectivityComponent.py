@@ -12,10 +12,10 @@ class Edge:
     def __str__(self):
         drones_str = ", ".join([f"({drone._x}, {drone._y})" for drone in self.dronesPositions])
         covered_ps_str = ", ".join([f"({ps._x}, {ps._y})" for ps in self.coveredPS])
-        return (f"\n\nEdge connects '{self.cluster1}' with '{self.cluster2}'\n"
+        return (f"  Edge connects '{self.cluster1}' with '{self.cluster2}'\n"
                 f"  Points: ({self.point1._x}, {self.point1._y}) -> ({self.point2._x}, {self.point2._y})\n"
                 f"  Drones positioned at: [{drones_str}]\n"
-                f"  Power Stations covered: [{covered_ps_str}]")
+                f"  Power Stations covered: [{covered_ps_str}]\n")
 
     __repr__ = __str__
 
