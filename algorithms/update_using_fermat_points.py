@@ -115,3 +115,36 @@ def find_best_triangles(edges, graph_builder):
     triples = find_triples(edges)
     results = [evaluate_triple(triple, edges, graph_builder) for triple in triples]
     return sorted(results, key=lambda x: x["gain"], reverse=True)
+
+
+def opt_drone_deployment(sorted_gain_array, mst_edges):
+    final_drones = []
+    used_edges = set()
+
+    i = 0
+    while i < len(sorted_gain_array):
+        entry = sorted_gain_array[0]
+        if entry['gain'] <= 0:
+            break
+
+        final_drones.extend(entry['best_triangle']['triangle_drones'])
+        for edge in entry['edges']:
+            used_edges.add((edge.cluster1, edge.cluster2))
+            used_edges.add((edge.cluster2, edge.cluster1))  # Handle bidirectional
+
+        mst_edges = [e for e in mst_edges if
+                     (e.cluster1, e.cluster2) not in used_edges and (e.cluster2, e.cluster1) not in used_edges]
+
+        sorted_gain_array = [
+            e for e in sorted_gain_array
+            if not any((ed.cluster1, ed.cluster2) in used_edges or (ed.cluster2, ed.cluster1) in used_edges for ed in
+                       e['edges'])
+        ]
+        i += 1
+
+    for edge in mst_edges:
+        final_drones.extend(edge.dronesPositions)
+
+    final_drones = list(set(final_drones))
+
+    return final_drones
