@@ -145,7 +145,7 @@ class Triangle:
         drones = [fermat_point]
         covered_stations = set()
         for seg in clear_segments:
-            seg_drones, seg_covered = seg.position_drones(power_stations, radius_drone_bs, obstacles)
+            seg_drones, seg_covered = seg.position_drones_evenly(power_stations, radius_drone_bs, obstacles)
             if seg_drones is not None:
                 drones += seg_drones
                 covered_stations.update(seg_covered)

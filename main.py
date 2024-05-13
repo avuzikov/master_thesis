@@ -14,4 +14,4 @@ sorted_gain_array = find_best_triangles(mst_edges, graph_builder)
 
 drone_positions = opt_drone_deployment(sorted_gain_array, mst_edges)
 
-print(drone_positions)
+print(len(drone_positions))
