@@ -139,6 +139,39 @@ class Segment:
     Returns drone positions and number of covered Power Stations
     '''
 
+    def position_drones_evenly(self, power_stations, radius_drone_bs, obstacles):
+        if not obstacles.is_segment_clear(Segment(self._point1, self._point2)):
+            return None, None
+
+        dx = self._point2.get_x() - self._point1.get_x()
+        dy = self._point2.get_y() - self._point1.get_y()
+        segment_length = math.sqrt(dx ** 2 + dy ** 2)
+
+        if segment_length <= radius_drone_bs:
+            return [], set()
+
+        num_intervals = math.ceil(segment_length / radius_drone_bs)
+        num_drones = num_intervals - 1
+        distance_between_drones = segment_length / num_intervals
+
+        # Position drones
+        drones = []
+        covered_power_stations = set()
+        for i in range(num_drones):
+            fraction = (i + 1) * distance_between_drones / segment_length
+            drone_x = self._point1.get_x() + fraction * dx
+            drone_y = self._point1.get_y() + fraction * dy
+            drone_position = Point(drone_x, drone_y)
+            drones.append(drone_position)
+
+            for station in power_stations:
+                if drone_position.distance_to(station) <= radius_drone_bs:
+                    station_segment = Segment(drone_position, station)
+                    if obstacles.is_segment_clear(station_segment):
+                        covered_power_stations.add(station)
+
+        return drones, covered_power_stations
+
     # covered with tests
     def position_drones(self, power_stations, radius_drone_bs, obstacles):
         # Check if the segment is obstructed by any obstacle
