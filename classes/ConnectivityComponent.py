@@ -45,8 +45,9 @@ class ConnectivityComponent:
         edge = None
         for first_station in self.BSs:
             for second_station in another_component.getBSs():
-                drones, covered_power_stations = Segment(first_station, second_station).position_drones_evenly(power_stations,
-                                                                                 radius_drone_bs, obstacles)
+                drones, covered_power_stations =\
+                    Segment(first_station, second_station).position_drones_evenly(power_stations, radius_drone_bs,
+                                                                                  obstacles)
                 if drones is None:
                     continue
                 if edge is None or \
