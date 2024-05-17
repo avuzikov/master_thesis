@@ -4,7 +4,7 @@ from thesisCode.classes.Segment import Segment
 from thesisCode.classes.Point import Point
 
 
-def avoid_obstacles(segment, power_stations, radius_drone_bs, obstacles, margin=1.0, num_particles=30,
+def avoid_obstacles_pso(segment, power_stations, radius_drone_bs, obstacles, margin=1.0, num_particles=30,
                     max_iterations=200):
     def objective_function(P):
         seg1 = Segment(segment._point1, P)
