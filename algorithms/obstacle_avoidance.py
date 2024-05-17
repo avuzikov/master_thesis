@@ -10,17 +10,18 @@ def avoid_obstacles(segment, power_stations, radius_drone_bs, obstacles, margin=
         seg1 = Segment(segment._point1, P)
         seg2 = Segment(segment._point2, P)
         if not (obstacles.is_segment_clear(seg1) and obstacles.is_segment_clear(seg2)):
-            return float('inf'), 0
+            return float('inf'), 0, float('inf')
 
         drones_seg1, covered1 = seg1.position_drones_evenly(power_stations, radius_drone_bs, obstacles)
         drones_seg2, covered2 = seg2.position_drones_evenly(power_stations, radius_drone_bs, obstacles)
         if drones_seg1 is None or drones_seg2 is None:
-            return float('inf'), 0
+            return float('inf'), 0, float('inf')
 
         total_drones = len(drones_seg1) + len(drones_seg2) + 1
         total_coverage = len(covered1.union(covered2))
+        total_length = seg1._point1.distance_to(seg1._point2) + seg2._point1.distance_to(seg2._point2)
 
-        return total_drones, total_coverage
+        return total_drones, total_coverage, total_length
 
     def generate_random_point():
         while True:
@@ -37,10 +38,12 @@ def avoid_obstacles(segment, power_stations, radius_drone_bs, obstacles, margin=
         dist2 = segment._point2.distance_to(P)
         return math.isclose(dist1 + dist2, max_distance_to_centers, rel_tol=1e-5)
 
-    def update_velocity(particle, best_particle, global_best):
+    def update_velocity(particle, best_position, global_best_position):
         inertia = 0.5
-        cognitive_component = (best_particle['position'] - particle['position']) * (1.5 * random.random())
-        social_component = (global_best['position'] - particle['position']) * (1.5 * random.random())
+        r1 = random.random()
+        r2 = random.random()
+        cognitive_component = (best_position - particle['position']) * (1.5 * r1)
+        social_component = (global_best_position - particle['position']) * (1.5 * r2)
         particle['velocity'] = (particle['velocity'] * inertia) + cognitive_component + social_component
 
     def update_position(particle):
@@ -54,39 +57,38 @@ def avoid_obstacles(segment, power_stations, radius_drone_bs, obstacles, margin=
     max_distance_to_centers = distance_between_centers * (1 + margin)
 
     particles = [
-        {'position': generate_random_point(), 'velocity': Point(0, 0), 'best_position': None, 'best_cost': float('inf'),
-         'best_coverage': 0} for _ in range(num_particles)]
-    global_best = {'position': None, 'cost': float('inf'), 'coverage': 0}
+        {'position': generate_random_point(), 'velocity': Point(random.uniform(-1, 1), random.uniform(-1, 1)),
+         'best_position': None, 'best_cost': (float('inf'), 0, float('inf'))}
+        for _ in range(num_particles)
+    ]
+    global_best_position = None
+    global_best_cost = (float('inf'), 0, float('inf'))
 
     for particle in particles:
-        cost, coverage = objective_function(particle['position'])
+        cost = objective_function(particle['position'])
         particle['best_position'] = particle['position']
         particle['best_cost'] = cost
-        particle['best_coverage'] = coverage
-        if cost < global_best['cost'] or (cost == global_best['cost'] and coverage > global_best['coverage']):
-            global_best['position'] = particle['position']
-            global_best['cost'] = cost
-            global_best['coverage'] = coverage
+        if cost < global_best_cost:
+            global_best_position = particle['position']
+            global_best_cost = cost
 
     for _ in range(max_iterations):
         for particle in particles:
-            update_velocity(particle, particle, global_best)
+            update_velocity(particle, particle['best_position'], global_best_position)
             update_position(particle)
 
-            cost, coverage = objective_function(particle['position'])
-            if cost < particle['best_cost'] or (cost == particle['best_cost'] and coverage > particle['best_coverage']):
+            cost = objective_function(particle['position'])
+            if cost < particle['best_cost']:
                 particle['best_position'] = particle['position']
                 particle['best_cost'] = cost
-                particle['best_coverage'] = coverage
 
-            if cost < global_best['cost'] or (cost == global_best['cost'] and coverage > global_best['coverage']):
-                global_best['position'] = particle['position']
-                global_best['cost'] = cost
-                global_best['coverage'] = coverage
+            if cost < global_best_cost:
+                global_best_position = particle['position']
+                global_best_cost = cost
 
-    if global_best['position'] is None or global_best['cost'] == float('inf'):
+    if global_best_position is None or global_best_cost[0] == float('inf'):
         return None
-    return global_best['position']
+    return global_best_position
 
 
 def generate_drone_positions_through_point(segment, best_point, radius_drone_bs, obstacles):

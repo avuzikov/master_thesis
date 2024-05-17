@@ -2,7 +2,7 @@ def build_spanning_tree(graph_builder):
     components = graph_builder.getComponents()
     power_stations = graph_builder.getPowerStations()
     obstacles = graph_builder.getObstacles()
-    radius_drone_bs = graph_builder.getRadiusDroneBS()
+    radius_drone_bs = graph_builder.getRadiusBS()
 
     # Creating a list to store the edges of the spanning tree
     mst_edges = []

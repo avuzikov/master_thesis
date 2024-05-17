@@ -5,10 +5,12 @@ from thesisCode.classes.Obstacles import Obstacles
 from thesisCode.classes.ConnectivityComponent import ConnectivityComponent
 
 class GraphBuilder:
-    def __init__(self, radius_bs, radius_drone_bs, base_stations, power_stations=[], obstacles=Obstacles()):
+    def __init__(self, radius_bs, base_stations, power_stations=[], obstacles=Obstacles()):
         # Filter out base and power stations that are inside obstacles
         base_stations, power_stations = self._check_stations_over_obstacles(base_stations, power_stations, obstacles)
 
+        self._base_stations = base_stations
+        self._power_stations = power_stations
         # Find initial connectivity components in graph
         self._components = self._find_components(base_stations, radius_bs, obstacles)
 
@@ -16,8 +18,15 @@ class GraphBuilder:
         self._power_stations = self._filter_covered_power_stations(power_stations, base_stations, radius_bs, obstacles)
 
         self._obstacles = obstacles
-        self._radiusBS = radius_bs
-        self._radiusDroneBS = radius_drone_bs
+        self._radius_bs = radius_bs
+
+    def addDrones(self, drones):
+        for drone in drones:
+            self._base_stations.append(drone)
+        self._components = self._find_components(self._base_stations, self._radius_bs, self._obstacles)
+        self._power_stations = self._filter_covered_power_stations(self._power_stations,self._base_stations,
+                                                                   self._radius_bs, self._obstacles)
+
 
     def getComponents(self):
         return self._components
@@ -29,10 +38,7 @@ class GraphBuilder:
         return self._obstacles
 
     def getRadiusBS(self):
-        return self._radiusBS
-
-    def getRadiusDroneBS(self):
-        return self._radiusDroneBS
+        return self._radius_bs
 
     def _check_stations_over_obstacles(self, base_stations, power_stations, obstacles):
         filtered_base_stations = []

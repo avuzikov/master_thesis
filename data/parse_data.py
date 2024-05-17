@@ -12,7 +12,6 @@ def parse_data(file_path):
 
     # Access data
     radius_drones_bs = data['radius_drones_bs']
-    radius_bs = data['radius_bs']
     base_stations_array = data['base_stations']
     power_stations_array = data['power_stations']
     obstacles_array = data['obstacles']
@@ -34,4 +33,4 @@ def parse_data(file_path):
         point2 = Point(points_array[2][0], points_array[2][1])
         obstacles.add_triangle(Triangle(point0, point1, point2))
 
-    return GraphBuilder(radius_bs, radius_drones_bs, base_stations, power_stations, obstacles)
+    return GraphBuilder(radius_drones_bs, base_stations, power_stations, obstacles)

@@ -12,11 +12,13 @@ graph_builder = parse_data('./thesisCode/data/test_data4.json')
 
 mst_edges, parent = build_spanning_tree(graph_builder)
 
+print(mst_edges, parent)
+
 triples = find_triples(mst_edges)
 
 sorted_gain_array = find_best_triangles(mst_edges, graph_builder)
 
-drone_positions = opt_drone_deployment(sorted_gain_array, mst_edges)
+drone_positions_initial = opt_drone_deployment(sorted_gain_array, mst_edges)
 
 # print(len(drone_positions))
 # print(drone_positions)

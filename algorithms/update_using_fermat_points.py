@@ -70,7 +70,7 @@ def create_edge_dict(edges):
 
 
 def evaluate_triple(triple, edges, graph_builder):
-    radius_drone_bs = graph_builder.getRadiusDroneBS()
+    radius_drone_bs = graph_builder.getRadiusBS()
     power_stations = graph_builder.getPowerStations()
     obstacles = graph_builder.getObstacles()
     components = graph_builder.getComponents()
