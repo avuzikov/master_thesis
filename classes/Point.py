@@ -43,3 +43,15 @@ class Point:
     # covered with tests
     def distance_to(self, other):
         return math.sqrt((self._x - other.get_x()) ** 2 + (self._y - other.get_y()) ** 2)
+
+    def __add__(self, other):
+        return Point(self._x + other.get_x(), self._y + other.get_y())
+
+    def __sub__(self, other):
+        return Point(self._x - other.get_x(), self._y - other.get_y())
+
+    def __mul__(self, scalar):
+        return Point(self._x * scalar, self._y * scalar)
+
+    def __truediv__(self, scalar):
+        return Point(self._x / scalar, self._y / scalar)
