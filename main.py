@@ -1,8 +1,8 @@
 from thesisCode.algorithms.build_spanning_tree import build_spanning_tree
 from thesisCode.algorithms.connect_using_pso import connect_using_pso
-from thesisCode.algorithms.obstacle_avoidance_pso import avoid_obstacles, generate_drone_positions_through_point
+from thesisCode.algorithms.obstacle_avoidance_pso import generate_drone_positions_through_point
 from thesisCode.algorithms.update_using_fermat_points import find_triples, find_best_triangles, opt_drone_deployment
-from thesisCode.data.parse_data import parse_data
+from thesisCode.data.parse_data_from_json import parse_data
 from thesisCode.classes.Segment import Segment
 from thesisCode.classes.Point import Point
 from thesisCode.classes.Obstacles import Obstacles

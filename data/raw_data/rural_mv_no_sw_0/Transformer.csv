@@ -1,0 +1,3 @@
+id;nodeHV;nodeLV;type;tappos;autoTap;autoTapSide;loadingMax;substation;subnet;voltLvl
+HV1-MV1.101-Trafo1;HV1 Bus 17;MV1.101 busbar1.1;25 MVA 110/20 kV YNd5;0;1;LV;100;HV1_MV1.101_Substation;MV1.101;4
+HV1-MV1.101-Trafo2;HV1 Bus 17;MV1.101 busbar1.1;25 MVA 110/20 kV YNd5;0;1;LV;100;HV1_MV1.101_Substation;MV1.101;4
