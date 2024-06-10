@@ -1,7 +1,0 @@
-id;nodeA;nodeB;type;cond;substation;subnet;voltLvl
-MV1.101 loop_line_switch 1.2;MV1.101 Bus 47;MV1.101 Bus 47_1;LBS;0;NULL;MV1.101_Feeder5;5
-MV1.101 loop_line_switch 2.2;MV1.101 Bus 63;MV1.101 Bus 63_1;LBS;0;NULL;MV1.101_Feeder6;5
-MV1.101 loop_line_switch 3.2;MV1.101 Bus 77;MV1.101 Bus 77_1;LBS;0;NULL;MV1.101_Feeder7;5
-MV1.101 loop_line_switch 4.2;MV1.101 Bus 96;MV1.101 Bus 96_1;LBS;0;NULL;MV1.101_Feeder8;5
-MV1.101 loop_line_switch 5.2;MV1.101 Bus 11;MV1.101 Bus 11_1;LBS;0;NULL;MV1.101_Feeder1;5
-MV1.101 loop_line_switch 6.2;MV1.101 Bus 63;MV1.101 Bus 63_2;LBS;0;NULL;MV1.101_Feeder6;5
