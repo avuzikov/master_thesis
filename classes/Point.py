@@ -55,3 +55,10 @@ class Point:
 
     def __truediv__(self, scalar):
         return Point(self._x / scalar, self._y / scalar)
+
+    def to_list(self):
+        return [self._x, self._y]
+
+    @staticmethod
+    def from_list(data):
+        return Point(data[0], data[1])

@@ -7,9 +7,11 @@ from thesisCode.classes.Segment import Segment
 from thesisCode.classes.Point import Point
 from thesisCode.classes.Obstacles import Obstacles
 from thesisCode.classes.Triangle import Triangle
+from thesisCode.data.save_drones_to_json import save_drones_to_json
 
+dataset_num = '0'
 # Load test data from JSON
-graph_builder = parse_data('./thesisCode/data/test_data4.json')
+graph_builder = parse_data('./thesisCode/data/real_test_data_obstacles' + dataset_num + '.json')
 
 mst_edges, parent = build_spanning_tree(graph_builder)
 
@@ -23,7 +25,8 @@ initial_drone_positions = opt_drone_deployment(sorted_gain_array, mst_edges)
 graph_builder.addDrones(initial_drone_positions)
 
 if len(graph_builder.getComponents()) > 1:
+    print("Connecting with the help of PSO...")
     connect_using_pso(graph_builder)
 
-# print(len(drone_positions))
-# print(drone_positions)
+save_drones_to_json('./thesisCode/data/results/drone_positions_obstacles' + dataset_num + '.json',
+                    initial_drone_positions)
