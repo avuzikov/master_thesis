@@ -26,7 +26,7 @@ graph_builder.addDrones(initial_drone_positions)
 
 if len(graph_builder.getComponents()) > 1:
     print("Connecting with the help of PSO...")
-    connect_using_pso(graph_builder)
+    pso_drones = connect_using_pso(graph_builder)
 
 save_drones_to_json('./thesisCode/data/results/drone_positions_obstacles' + dataset_num + '.json',
-                    initial_drone_positions)
+                    initial_drone_positions + pso_drones)
