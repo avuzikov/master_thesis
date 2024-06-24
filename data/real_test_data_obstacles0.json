@@ -1,5 +1,5 @@
 {
-  "_comment": "no obstacles, rural 0",
+  "_comment": "rural 0, with obstacles",
   "radius_drones_bs": 0.4,
   "base_stations": [
     [
